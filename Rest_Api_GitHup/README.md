@@ -75,4 +75,3 @@ print_r($response);
     🧠 Author: You
     📅 Version: 1.0
     📘 License: MIT
-
