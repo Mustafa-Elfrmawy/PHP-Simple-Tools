@@ -2,45 +2,11 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-function chechSessionStatus()
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    if (isset($_SESSION['status'])) {
-        switch ($_SESSION['status']) {
-            case 'success':
-                echo "<p style='color: green;'> Operation completed successfully.</p>";
-                break;
-            case 'error':
-                echo "<p style='color: red;'> An error occurred during the operation.</p>";
-                break;
-            default:
-                break;
-        }
-        unset($_SESSION['status']);
-    }
-}
-spl_autoload_register(function ($class) {
-    $paths = [
-        __DIR__ . "/Actions/$class.php",
-        __DIR__ . "/../learning/$class.php"
-    ];
+require_once 'Actions/UploadCheckSession.php';/* return runder object ave a 2 function */
 
-    foreach ($paths as $file) {
-        if (file_exists($file)) {
-            require_once $file;
-            return;
-        }
-    }
-});
 $resopnse = new Actions;
 $data = $resopnse->getData();
-// if (isset($data['message'])) {
 
-    // var_dump($data);
-    // exit();
-// }
 
 
 
@@ -52,83 +18,11 @@ $data = $resopnse->getData();
 <head>
     <meta charset="UTF-8">
     <title>GitHub Repositories</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            background-color: #f9f9f9;
-        }
-
-        .create-btn {
-            background-color: #2ecc71;
-        }
-
-
-        table {
-            width: 90%;
-            margin: auto;
-            border-collapse: collapse;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: white;
-        }
-
-        th,
-        td {
-            padding: 14px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-
-        .edit-btn {
-            background-color: #3498db;
-            margin-right: 8px;
-            /* margin-bottom:30px; */
-
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-
-        .delete-btn {
-            background-color: #e74c3c;
-        }
-
-        .danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            margin: 20px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <?php chechSessionStatus() ?>
+    <?php $render->chechSessionStatus() ?>
 
     <h2 style="text-align:center;">GitHub Repositories</h2>
 
@@ -185,9 +79,9 @@ $data = $resopnse->getData();
             elseif (isset($data["error"])):
                 echo "<div  class='danger' role='alert'> .{$data['error']}. 
                  </div>";
-                 elseif (isset($data["message"])):
-                    // $data = $data["error"];
-                    echo "<div  class='danger' role='alert'> .{$data['message']}. 
+            elseif (isset($data["message"])):
+                // $data = $data["error"];
+                echo "<div  class='danger' role='alert'> .{$data['message']}. 
                      </div>";
             endif;
 ?>

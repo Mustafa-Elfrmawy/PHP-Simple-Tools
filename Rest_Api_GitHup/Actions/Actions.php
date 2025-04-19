@@ -1,34 +1,27 @@
 <?php
+
 declare(strict_types=1);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-spl_autoload_register(function ($class) {
-    $paths = [
-        __DIR__ . "/Actions/$class.php",
-        __DIR__ . "/../../learning/$class.php"
-    ];
 
-    foreach ($paths as $file) {
-        if (file_exists($file)) {
-            require_once $file;
-            return;
-        }
-    }
-});
 class Actions
 {
     protected $headers = [
         "Content-Type: application/json",
         "User-Agent: example rest api",
-        "Authorization: token your_token",
+        "Authorization: token your_token_here",
     ];
+    public function __construct()
+    {
+        require_once __DIR__ . "/../../learning/Curl.php";
+    }
 
     public function getData(): array
     {
         $ch = new Curl();
         $response = $ch->curl("GET", "https://api.github.com/user/repos", $this->headers);
-        return $this->returnResponse($response);
+        return  $this->returnResponse($response);
     }
     public function getRepositre(string $full_name): array
     {
@@ -39,12 +32,11 @@ class Actions
     }
     public function update(array $post): array
     {
-        
-            $ch = new Curl();
-            $full_name = $this->validate($post['full_name']);
-            $response = $ch->curl("patch", "https://api.github.com/repos/{$full_name['owner']}/{$full_name['repo']}", $this->headers, $post);
-            return $this->returnResponse($response);
-        
+
+        $ch = new Curl();
+        $full_name = $this->validate($post['full_name']);
+        $response = $ch->curl("patch", "https://api.github.com/repos/{$full_name['owner']}/{$full_name['repo']}", $this->headers, $post);
+        return $this->returnResponse($response);
     }
     public function delete(string $post): null | array
     {
@@ -54,11 +46,11 @@ class Actions
         return $response;
     }
 
-    public function create(array $post): array 
+    public function create(array $post): array
     {
-            $ch = new Curl();
-            $response = $ch->curl("post", "https://api.github.com/user/repos", $this->headers, $post);
-             return $this->returnResponse($response);
+        $ch = new Curl();
+        $response = $ch->curl("post", "https://api.github.com/user/repos", $this->headers, $post);
+        return $this->returnResponse($response);
     }
 
     public function return(array $response)
@@ -87,7 +79,7 @@ class Actions
         return ["owner" => $owner, "repo" => $repo];
     }
 
-    public function returnResponse($response): array
+    public function returnResponse(array | string | null $response): array
     {
         return (is_array($response)) ? $response :  ["error" => "Sorry, an error occurred while retrieving the data or The link may be incorrect. Please try again later."];
     }
