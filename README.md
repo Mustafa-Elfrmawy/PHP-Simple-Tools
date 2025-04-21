@@ -1,33 +1,166 @@
-# PHP-Simple-Tools
+# PHP Utility Toolkit
 
-This repository contains a collection of simple and reusable PHP classes created for learning and practicing PHP fundamentals.
+A collection of PHP tools for database handling, HTTP requests, and GitHub API management.
 
-Each folder represents a standalone utility class that solves a common programming task:
-- **Curl** – A class to simplify sending HTTP requests with cURL.
-- **GitHubManager** – A class that interacts with the GitHub REST API (CRUD operations for repositories).
-- **DatabaseHandler** – A PDO-based class for interacting with a MySQL database.
+## 📦 Included Tools
+1. **[DBHandler](/DBHandler/README.md)** - PDO-based database operations  
+2. **[Curl](/Curl/README.md)** - HTTP client wrapper  
+3. **[GitHub API Manager](/GitHubAPIManager/README.md)** - GitHub REST API interactions  
 
-## Structure
+## 🚀 Quick Start
+```bash
+git clone https://github.com/yourusername/repo.git
 
-- `Curl/` - Contains `Curl.php` with a class to send GET, POST, PATCH, and DELETE requests.
-- `GitHubManager/` - Contains logic to create, edit, delete, and fetch GitHub repositories using GitHub API.
-- `DatabaseHandler/` - Provides a simple abstraction for basic database operations (select, insert, update, delete).
+⚙️ Requirements
 
-Each folder includes its own `README.md` file explaining how to use the class inside.
+    PHP 8.0+
+
+    cURL extension
+
+    GitHub Personal Access Token (for API tools)
+
+📝 Documentation
+
+Each tool has its own dedicated documentation:
+
+    DBHandler
+
+    Curl
+
+    GitHub API Manager
+
+
 
 ---
 
-## 💡 Purpose
+### **1. `DBHandler/README.md`**
+```markdown
+# DBHandler - PDO Wrapper
 
-The main goal of this repository is to help PHP learners understand:
-- How to organize code in classes.
-- How to use cURL in PHP.
-- How to consume external APIs.
-- How to interact with databases using PDO.
+Lightweight database handler for CRUD operations using PDO.
+
+## 🔧 Methods
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `select` | `select(PDO $pdo, string $query, array $params = []): array` | Executes SELECT queries |
+| `insert` | `insert(PDO $pdo, string $table, array $data): bool` | Inserts records |
+| `update` | `update(PDO $pdo, string $table, array $data, string $idColumn, $idValue): bool` | Updates records |
+| `delete` | `delete(PDO $pdo, string $table, string $idColumn, $idValue): bool` | Deletes records |
+
+## 💡 Example
+```php
+require_once 'DBHandler.php';
+
+$pdo = new PDO('mysql:host=localhost;dbname=test', 'user', 'pass');
+$users = DBHandler::select($pdo, "SELECT * FROM users WHERE status = ?", [1]);
+
+🛡️ Error Handling
+
+Throws Exception when:
+
+    Column count doesn't match input data
+
+    PDO operations fail
+
+
+    
+---
+
+### **2. `Curl/README.md`**
+```markdown
+# Curl - HTTP Client
+
+PSR-compatible HTTP request handler with JSON support.
+
+## 🌟 Features
+- Supports all HTTP methods (GET/POST/PUT/PATCH/DELETE)
+- Automatic header formatting
+- JSON/URL-encoded body handling
+
+## 🛠️ Usage
+```php
+$curl = new Curl();
+$response = $curl->curl(
+    'POST',
+    'https://api.example.com/data',
+    ['Content-Type' => 'application/json'],
+    ['key' => 'value']
+);
+
+
+📊 Response Handling
+
+Returns:
+
+    array for successful JSON responses
+
+    string containing error message if request fails
+
+⚠️ Notes
+
+    Always closes cURL handle automatically
+
+    Sets CURLOPT_HEADER to true by default
+
+
+
 
 ---
 
-## 📌 Requirements
+### **3. `GitHubAPIManager/README.md`**
+```markdown
+# GitHub API Manager
 
-- PHP 7.4+
-- Composer (if you plan to extend with packages)
+PHP class for GitHub REST API interactions.
+
+## 🔑 Authentication
+Replace `your_token_here` in:
+```php
+protected $headers = [
+    "Authorization: token your_token_here"
+];
+
+
+📋 Available Methods
+Method	Endpoint	HTTP Verb
+getData()	/user/repos	GET
+getRepositre()	/repos/{owner}/{repo}	GET
+create()	/user/repos	POST
+update()	/repos/{owner}/{repo}	PATCH
+delete()	/repos/{owner}/{repo}	DELETE
+
+🖥️ Web Integration Example
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $actions = new Actions();
+    $response = match ($_POST['status']) {
+        'create' => $actions->create($_POST),
+        'edit' => $actions->update($_POST),
+        'delete' => $actions->delete($_POST['full_name'])
+    };
+}
+
+🔄 Response Format
+
+Always returns associative array:
+{
+    "success": {"data": "..."},
+    "error": {"error": "message"}
+}
+
+
+---
+
+### 🎯 **Why This Structure Works**
+1. **Modular Documentation** - Each tool has focused docs  
+2. **Quick Navigation** - Linked READMEs in root file  
+3. **Consistency** - Uniform sections (Methods, Examples, Notes)  
+4. **Visual Hierarchy** - Tables/headers improve readability  
+
+### 📌 **Pro Tip**
+Add a **`docs/`** folder for:
+- CHANGELOG.md
+- CONTRIBUTING.md
+- Example scripts showing all tools working together
+
+Would you like me to add any specific details or examples for any section?
